@@ -1,0 +1,49 @@
+version: '3.7'
+
+services:
+    redmine:
+        platform: linux/x86_64
+        image: redmine:3.4.13-passenger
+        container_name: redmine
+        ports:
+            - '33000:3000'
+        expose:
+            - '3000'
+        volumes:
+            - ./redmine/files:/usr/src/redmine/files
+            - ./redmine/log:/usr/src/redmine/log
+            - ./redmine/plugins:/usr/src/redmine/plugins
+            - ./redmine/public/themes:/usr/src/redmine/public/themes
+        restart: always
+        environment:
+            REDMINE_DB_POSTGRES: postgres
+            REDMINE_DB_DATABASE: redmine
+            REDMINE_DB_USERNAME: redmine
+            REDMINE_DB_PASSWORD: redmine
+            TZ: Asia/Tokyo
+        links:
+            - postgres
+
+    # DBサーバ
+    postgres:
+        platform: linux/x86_64
+        build:
+            context: ./
+            dockerfile: ./Dockerfile
+        container_name: postgres
+        volumes:
+            - ./postgres/db-data:/var/lib/postgresql/data
+            - ./postgres/initdb:/docker-entrypoint-initdb.d
+        ports:
+            - "5432:5432"
+        restart: always
+        environment:
+            POSTGRES_ROOT_PASSWORD: postgres
+            POSTGRES_USER: redmine
+            POSTGRES_PASSWORD: redmine
+            POSTGRES_DATABASE: redmine
+            TZ: Asia/Tokyo
+
+volumes:
+    redmine:
+    postgres:
