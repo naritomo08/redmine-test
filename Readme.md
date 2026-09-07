@@ -18,3 +18,7 @@ http://localhost:33000
 docker-compose exec redmine /bin/bash
 docker-compose exec postgres /bin/bash
 ```
+
+## 関連Qiita記事
+
+- [個別記事から未紹介だった公開GitHubリポジトリを整理してみた](https://qiita.com/naritomo08/items/1620081b4363c3d0b400)
